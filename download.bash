@@ -19,9 +19,10 @@ else
     rpm2cpio insync-*.rpm | cpio -ivdm --directory=$PWD
     pushd $PWD/usr/lib/insync/
     rm libX11.so.6
+    rm libxkbcommon.so.0
     popd
     pushd $PWD/usr/bin/
-    find . -type f -name 'insync' -exec sed -i 's/\"\$@\"/\"\$@\" --ca-path \/etc\/ssl\/certs\//g' {} \;
+#     find . -type f -name 'insync' -exec sed -i 's/\"\$@\"/\"\$@\" --ca-path \/etc\/ssl\/certs\//g' {} \;
     find . -type f -name 'insync' -exec sed -i 's/\/usr\/lib\/insync/\/usr\/lib64\/insync/g' {} \;
     popd
 fi
