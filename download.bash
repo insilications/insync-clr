@@ -20,9 +20,11 @@ else
     pushd $PWD/usr/lib/insync/
     rm libX11.so.6
     rm libxkbcommon.so.0
+    rm libtinfo.so.6
+    rm libpng16.so.16
     popd
     pushd $PWD/usr/bin/
-#     find . -type f -name 'insync' -exec sed -i 's/\"\$@\"/\"\$@\" --ca-path \/etc\/ssl\/certs\//g' {} \;
-    find . -type f -name 'insync' -exec sed -i 's/\/usr\/lib\/insync/\/usr\/lib64\/insync/g' {} \;
+    sd "/usr/lib/insync/insync" "/usr/lib64/insync/insync" $(fd insync .)
+    sd '"\$@"' '"$@" --ca-path /var/cache/ca-certs/anchors/ --qt-qpa-platform xcb' $(fd insync .)
     popd
 fi
