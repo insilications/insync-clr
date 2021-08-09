@@ -18,20 +18,22 @@ else
     echo -e "\e[33m\xE2\x9C\x93 Found insync-<VERSION>-fc34.x86_64.rpm\e[m"
     rpm2cpio insync-*.rpm | cpio -ivdm --directory=$PWD
     pushd $PWD/usr/lib/insync/
-#     rm libX11.so*
-#     rm libxkbcommon.so*
-#     rm libtinfo.so*
-#     rm libpng16.so*
-#     rm lib{drm,GLX,GLdispatch}.so*
-#     rm libgdk_pixbuf-2.0.so*
+    rm libX11* || :
+    rm libxkbcommon.so* || :
+    rm libtinfo.so* || :
+    rm libpng16.so* || :
+    rm lib{drm,GLX,GLdispatch}.so* || :
+    rm libgdk_pixbuf-2.0.so* || :
+    rm libxkbcommon.so* || :
+    rm libxcb* || :
     popd
     pushd $PWD/usr/bin/
-    if output=$(rg '/usr/lib/insync/insync' "$(fd -a insync .)"); then
-        sd "/usr/lib/insync/insync" "/usr/lib64/insync/insync" "$(fd -a insync .)"
+    if output=$(rg '/usr/lib/insync/insync' "$(fd -a ^insync$)"); then
+        sd "/usr/lib/insync/insync" "/usr/lib64/insync/insync" "$(fd -a ^insync$)"
     fi
-    if ! output=$(rg 'ca-path' "$(fd -a insync .)"); then
-        sd '"\$@"' '"$@" --ca-path /var/cache/ca-certs/anchors/ --qt-qpa-platform xcb' "$(fd -a insync .)"
-        sd 'LC_TIME=C' 'LC_TIME=C QT_QPA_PLATFORM=xcb' "$(fd -a insync .)"
+    if ! output=$(rg 'ca-path' "$(fd -a ^insync$)"); then
+        sd '"\$@"' '"$@" --ca-path /var/cache/ca-certs/anchors/ --qt-qpa-platform xcb' "$(fd -a ^insync$)"
+        sd 'LC_TIME=C' 'LC_TIME=C QT_QPA_PLATFORM=xcb QTWEBENGINE_CHROMIUM_FLAGS="--no-sandbox"' "$(fd -a ^insync$)"
     fi
     popd
 fi
